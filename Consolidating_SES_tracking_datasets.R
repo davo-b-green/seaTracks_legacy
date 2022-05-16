@@ -1,21 +1,23 @@
+# Title: Code for unzipping SRDL files, extracting location and dive data from associated ACCESS databases, and compiling 
+# into master location and dive datasets
+# Compiled by David Green
+# Date: 17-05-2022
 
 # ----------------------------------------------------------------------------------------------------------------------------------- #
 library(curl)
-library(dplyr)
 library(RODBC)
+library(tidyverse)
 library(fs)
-library(stringr)
-library(tidyselect)
-
+library(here)
 # ----------------------------------------------------------------------------------------------------------------------------------- #
 
 # Get relative file paths for 
-here::i_am(path = "./Consolidating_SES_tracking_datasets.R") # set root directory for project
+i_am(path = "./Consolidating_SES_tracking_datasets.R") # set root directory for project
 # p <- "c:/Users/greendb/OneDrive - University of Tasmania/SMRU Data/" # directory with zipped files
-p <- here::here("")
+p <- here("")
 # df <- "ACCESS_Files" # Destination for unzipped files
-df <- here::here("ACCESS_Files")
-fs::dir_create(path = here::here("Consolidated_datasets"))
+df <- here("ACCESS_Files")
+dir_create(path = here("Consolidated_datasets"))
 
 # ----------------------------------------------------------------------------------------------------------------------------------- #
 
@@ -68,11 +70,13 @@ dataLoc <- lapply(fl, function(x){
   odbcClose(con) # close ACCESS db connection
   return(data)
 }) |> 
-  bind_rows()
+  bind_rows() |> 
+  rowwise() |> 
+  mutate(CAMPAIGN = str_split(REF, pattern = "[\\_-]+")[[1]][1])
 
 # Save dataset
 write_delim(x = dataLoc,
-            file = here::here("Consolidated_datasets", "loc_all_ses_raw_pre-qc.txt"),
+            file = here("Consolidated_datasets", "loc_all_ses_raw_pre-qc.txt"),
             delim = "\t"
             )
 
@@ -114,11 +118,13 @@ if(is.null(data)){
   
 }
 }) |>  
-  bind_rows()
+  bind_rows() |> 
+  rowwise() |> 
+  mutate(CAMPAIGN = str_split(REF, pattern = "[\\_-]+")[[1]][1])
 
 # Save dataset
 write_delim(x = dataDive,
-            file = here::here("Consolidated_datasets", "dive_all_ses_raw_pre-qc.txt"),
+            file = here("Consolidated_datasets", "dive_all_ses_raw_pre-qc.txt"),
             delim = "\t"
 )
 # ----------------------------------------------------------------------------------------------------------------------------------- #
