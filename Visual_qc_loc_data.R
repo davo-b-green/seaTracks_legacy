@@ -41,13 +41,13 @@ g_track <- ggplot(data = subDat,
                                 colour = D_DATE
                                 )
                   ) +
-  geom_path() + 
   geom_polygon(mapping = aes(x = long,
                              y = lat,
                              group = group),
                data = wrld,
                fill = "grey60",
                colour = NA) +
+  geom_path() + 
   coord_fixed(xlim = ext[1:2],
               ylim = ext[3:4],
               expand = FALSE,
