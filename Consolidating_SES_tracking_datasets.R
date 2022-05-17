@@ -80,12 +80,12 @@ write_delim(x = dataLoc,
             delim = "\t"
             )
 
+cat("Campaigns missing dive data:", file = here("Consolidated_datasets","missing_dive_dat.txt"), sep = "\n")
 # ----------------------------------------------------------------------------------------------------------------------------------- #
 ## Create dive dataset
 dataDive <- lapply(fl, function(x){
   cat("Processing dives: ", x, "\n")
   con = odbcDriverConnect(paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=",x))
-  
   data = tryCatch( # Catch any errors coming from their being no dive data
     sqlFetch(con, "dive"),
     error = function(e){
@@ -94,7 +94,13 @@ dataDive <- lapply(fl, function(x){
   
 if(is.null(data)){
   odbcClose(con) # close ACCESS db connection
-  return(data.frame(REF = str_split(x, "/")[[1]][length(str_split(x, "/")[[1]])]))
+  REF = str_split(x, "/")[[1]][length(str_split(x, "/")[[1]])]
+  REF = str_sub(REF, 1, nchar(REF)-4)
+  cat(REF, 
+      file = here("Consolidated_datasets","missing_dive_dat.txt"), 
+      append = TRUE,
+      sep = "\n")
+  # return(data.frame(REF = str_split(x, "/")[[1]][length(str_split(x, "/")[[1]])]))
 }else{  
   data = select(data, -which(as.character(sapply(data, class)) %in% "ODBC_binary")) |>  # remove unrecognised ODBC_binary variables
     mutate( 
