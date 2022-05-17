@@ -11,7 +11,7 @@ library(fs)
 library(here)
 # ----------------------------------------------------------------------------------------------------------------------------------- #
 
-# Get relative file paths for 
+# Get relative file paths
 i_am(path = "./Consolidating_SES_tracking_datasets.R") # set root directory for project
 # p <- "c:/Users/greendb/OneDrive - University of Tasmania/SMRU Data/" # directory with zipped files
 p <- here("")
