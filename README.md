@@ -1,7 +1,7 @@
 # seaTracks
 Code to compile and process satellite tracking and diving datasets retrieved from the SMRU portal
 
-# ~detailed description pending~
+ {detailed description pending}
   
 The code is laid out in several small scripts that each perform a single task. When starting from scratch, the scripts should be run in the following order:
   1. download-raw-datasets # (This script interfaces with the SMRU portal to download available campaigns as laid out in the "available_campaigns.csv". Note, this requires login details.)
