@@ -7,14 +7,13 @@
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 library(tidyverse)
-library(here)
+library(here) # This sets location of root directory
 library(data.table)
 library(fs)
 library(rnaturalearthdata)
 # library(cowplot)
 library(gridExtra)
 # Read in location data
-i_am("./Visual_qc_loc_data.R") # set location of root directory
 locData <- fread(here("Consolidated_datasets/loc_all_ses_raw_pre-qc.txt"))
 
 # Creating some qc plots, iterating through individuals
@@ -25,11 +24,7 @@ wrld <- countries50 |>
   fortify()
 
 #
-lapply(unique(locData$REF), function(x){
-# x = unique(locData$REF)[1]
-# ext <- c(range(locData$LON, na.rm=T),
-#          range(locData$LAT, na.rm=T))
-
+lapply(unique(locData$REF), function(x){ # Iterate through individual deployments
 
 subDat <- locData |> 
   filter(REF %in% x)
@@ -53,8 +48,6 @@ g_track <- ggplot(data = subDat,
               expand = FALSE,
               ratio = 2
               )
-  
-# g_track
 
 # Longitude against time
 g_long <- ggplot(data = subDat,
@@ -64,8 +57,6 @@ g_long <- ggplot(data = subDat,
   geom_path() +
   geom_point()
 
-# g_long
-
 # Latitude against time
 g_lat <- ggplot(data = subDat,
                  mapping = aes(x = D_DATE,
@@ -73,8 +64,6 @@ g_lat <- ggplot(data = subDat,
 ) +
   geom_path() +
   geom_point()
-
-# g_lat
 
 # Tag metrics
 time1 <- range(subDat$D_DATE)[1]
@@ -99,9 +88,7 @@ plotDat <- tibble(
             paste(rInt[2,1], "hours"))
 )
 
-# plot_grid(g_track, plot_grid(g_long, g_lat, ncol = 2), NULL, ncol = 1)
-
-ggsave(filename = paste0(here("Consolidated_datasets/loc_qc_plots/"),"/", x,"qc.pdf"),
+ggsave(filename = paste0(here("Consolidated_datasets/loc_qc_plots/"),"/", x,"_qc.pdf"),
        plot = grid.arrange(grobs = list(g_track, 
                                         grid.arrange(g_long, g_lat, ncol = 2), 
                                         tableGrob(plotDat)), 
