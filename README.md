@@ -10,6 +10,7 @@ The code is laid out in several small scripts that each perform a single task. W
   4. process_tracks # This script processes the location data using a state-space model from the foieGras package 
   
 Additional scripts:
+  
   4. visual_qc_loc_data # This exports some simple diagnostic plots of each deployment for visual quality checking - plots are added to the "loc_qc_plots" sub-directory in "compiled_datasets"
   
   5. cross-ref_loc-dive-and-meta # Is under development for cross-referencing between the location/dive datasets and the metadata
