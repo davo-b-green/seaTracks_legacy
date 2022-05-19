@@ -1,4 +1,4 @@
-# Download datasets from SMRU portal
+# Download tracking datasets from SMRU portal
 
 # Author: David Green
 # Date: 18 May 2022
